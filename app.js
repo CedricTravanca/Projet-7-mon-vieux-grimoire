@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const bookRoutes = require ('./routes/book');
+
 const app = express();
 
 mongoose.connect('mongodb+srv://cedrictravanca:cedricoo@cluster12.alrrcmy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster12',
@@ -20,24 +22,7 @@ app.use((req, res, next) => {
     next();
   });
 
-app.post('/api/books', (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: 'book créé !'
-  });
-});
-
-app.get('/api/books', (req, res) => {
-    res.send('exemples de texte pour mes livres get')
-    res.status(200).json(books);
-});
-
-app.delete('/api/books/:id', (req, res) => {
-    Thing.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'objet supprimé'}))
-    .catch(error => res.status(400).json({ error }));
-});
-
+app.use('api/books', bookRoutes);
 
 
 app.use('/',routeur);
