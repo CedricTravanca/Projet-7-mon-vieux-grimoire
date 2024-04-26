@@ -7,7 +7,6 @@ exports.createBook = (req, res, next) => {
   const bookObject = JSON.parse(req.body.book);
   delete bookObject._id;
   delete bookObject._userId;
-  console.log(bookObject)
   const book = new Book({
       ...bookObject,
       userId: req.auth.userId,
@@ -75,4 +74,34 @@ exports.getAllBooks = (req, res, next) => {
     .then(books => res.status(200).json(books))
     .catch(error => res.status(400).json({ error }));
 };
+
+// Rate a book
+exports.rateBook = (req, res, next) => {
+    const grade = req.body.rating;
+    const userId = req.auth.userId;
+    const bookId = req.params.id;
+  
+    Book.findOne({ _id: bookId })
+      .then(book => {
+        if (!book) {
+          return res.status(404).json({ message: 'Livre non trouvé' });
+        }
+        
+        const userRating = book.ratings.find(rating => rating.userId === userId);
+
+        if (userRating) {
+          return res.status(403).json({ message: 'Vous avez déjà évalué ce livre' });
+        }
+
+        book.ratings.push({ userId, grade });
+})}
+
+//Get best books 
+ exports.getBestBooks = (req, res, next) => {
+    Book.find()
+        .sort({ averageRating: -1 })
+        .limit(3)
+            .then(books => res.status(200).json(books))
+            .catch(error => res.status(400).json({ error }));
+ };
 
