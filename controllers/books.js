@@ -94,7 +94,23 @@ exports.rateBook = (req, res, next) => {
         }
 
         book.ratings.push({ userId, grade });
-})}
+
+        const totalRatings = book.ratings.length;
+        const sumRatings = book.ratings.reduce((sum, rating) => sum + rating.grade, 0);
+  
+        book.averageRating = parseFloat((sumRatings / totalRatings).toFixed(1));
+        
+        return book.save();
+      })
+
+      .then(book => {
+        res.status(200).json(book);
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).json({ error });
+      });
+};
 
 //Get best books 
  exports.getBestBooks = (req, res, next) => {
