@@ -77,6 +77,7 @@ exports.getAllBooks = (req, res, next) => {
 
 // Rate a book
 exports.rateBook = (req, res, next) => {
+  if (0 <= req.body.rating <= 5) {
     const grade = req.body.rating;
     const userId = req.auth.userId;
     const bookId = req.params.id;
@@ -110,6 +111,11 @@ exports.rateBook = (req, res, next) => {
         console.error(error);
         res.status(500).json({ error });
       });
+  } else {
+      res
+        .status(400)
+        .json({ message: "La note doit être comprise entre 1 et 5" });
+    };
 };
 
 //Get best books 
