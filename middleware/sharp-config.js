@@ -10,7 +10,7 @@ const MIME_TYPES = {
 };
 
 const storage = multer.diskStorage({
-  // Enregistrement des fichiers dans le dossier images
+
   destination: (req, file, callback) => {
     callback(null, 'images');
   },
